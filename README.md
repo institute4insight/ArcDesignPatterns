@@ -1,2 +1,2 @@
-# ArcDesignPatterns
-Collection of design patterns
+# ARC Design Patterns
+Collection of design patterns.
