@@ -4,6 +4,16 @@ Example to for using containers with GPU
 
 Run with podman
 
+Containers
+Find containers for your desired framework on the [Frameworks Support Matrix](https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html)
+
+| Framework | Container | Release Notes |
+|--|--|--|
+| PyTorch | [nvcr.io/nvidia/pytorch:24.01-py3](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch) | [PyTorch Release 24.01(TensorFlow Release 24.01)
+| TensorFlow | [nvcr.io/nvidia/tensorflow:24.01-tf2-py3](https://catalog.ngc.nvidia.com/orgs/nvidia/containers/tensorflow) | [TensorFlow Release 24.01](https://docs.nvidia.com/deeplearning/frameworks/tensorflow-release-notes/rel-24-01.html#rel-24-01)
+
+
+
 ```
 podman run \
 	-p 8888:8888 \
