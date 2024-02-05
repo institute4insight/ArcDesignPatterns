@@ -14,15 +14,20 @@ EOF
 cat <<EOF
 JupyterLab is running on port ${FREE_PORT}
 
-Create an SSH tunnel on your local computer with
-    $ ssh -fNL 8888:localhost:${FREE_PORT} ${USER}@10.230.100.240
++------------------------------------------------------------------+
+| Create an SSH tunnel on your local computer with                 |
+|    $ ssh -fNL 8888:localhost:${FREE_PORT} ${USER}@10.230.100.240 |
++------------------------------------------------------------------+
 
-You can access JupyterLab by visiting:
+You can access Jupyter Lab by visiting:
     http://localhost:8888
 
 Look in the Jupter output below for your access token!
 
 EOF
+
+loginctl enable-linger $UID
+podman system migrate
 
 podman run \
 	-p ${FREE_PORT}:8888 \
