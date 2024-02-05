@@ -18,18 +18,19 @@ The following steps demonstrate how to start Jupyter Lab. You can familiarize yo
 Terminate your notebooks and the Jupyter Lab container **immedeatly after your work**.
 Open notebooks may allocate and block GPU memeory even when no computation is performed.
 
+Use one of thise scripts to launch a container with Jupyter Lab:
+- [PyTorch Jupter Lab](./scripts/pytorch-jupyter-lab.sh)
+- [Tensorflow Jupyter Lab](./scripts/tensorflow-jupyter-lab.sh)
 
+Follow the instructions on the terminal for creating the SSH tunnel between your local computer and the GPU server.
 
+Please, terminate your Jupyter Lab container when your finished your work and delete the container image. (Select 'y' when prompted for it.)
 
-Example to for using containers with GPU
-
-Run with podman
-
-Enable user
+<!-- Enable user
 ```
 loginctl enable-linger USER_ID
 podman system migrate
-```
+``` -->
 
 ## Containers
 Find containers for your desired framework on the [Frameworks Support Matrix](https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html)
@@ -61,7 +62,11 @@ podman run \
 | `nvcr.io/nvidia/pytorch:24.01-py3` | Name of container image, e.g. PyTorch. |
 | `jupyter-lab` | Command to run in container. This example will start Jupyter Lab. |
 
-
+## Build your own container
+- Use a suitable container image that includes most of your required packages.
+- Edit the `Dockerfile` ([doc](https://docs.docker.com/engine/reference/builder/))
+- Build with `podman build` ([doc](https://manpages.ubuntu.com/manpages/jammy/en/man1/docker-build.1.html))
+- Use `podman system prune -a` to clean-up
 
 ## Cleaning-up
 Container images are stored on the very fast, but of limited capacity, staging file system `/staging`. When you have finished your work, use this command to free up valuable disk space.
