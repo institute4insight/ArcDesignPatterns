@@ -45,7 +45,7 @@ Find containers for your desired framework on the [Frameworks Support Matrix](ht
 ```
 podman run \
 	-p 8888:8888 \
-	--device nvidia.com/gpu=all \
+	--device nvidia.com/gpu=0 \
 	--security-opt=label=disable \
 	-v $PWD:/myhome -v /data:/mydata \
 	 nvcr.io/nvidia/pytorch:24.01-py3 jupyter-lab
