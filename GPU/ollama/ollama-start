@@ -1,0 +1,79 @@
+#!/bin/bash
+cat <<'EOF'
+  ____  _             _                                                             
+ / ___|| |_ __ _ _ __| |_                                                           
+ \___ \| __/ _` | '__| __|                                                          
+  ___) | || (_| | |  | |_                                                           
+ |____/ \__\__,_|_|   \__|                                                          
+   ___  _     _        _    __  __    _      ____                                   
+  / _ \| |   | |      / \  |  \/  |  / \    |  _ \  __ _  ___ _ __ ___   ___  _ __  
+ | | | | |   | |     / _ \ | |\/| | / _ \   | | | |/ _` |/ _ \ '_ ` _ \ / _ \| '_ \ 
+ | |_| | |___| |___ / ___ \| |  | |/ ___ \  | |_| | (_| |  __/ | | | | | (_) | | | |
+  \___/|_____|_____/_/   \_\_|  |_/_/   \_\ |____/ \__,_|\___|_| |_| |_|\___/|_| |_|
+                                                                                v1.0                                                                                 
+EOF
+OLLAMA_DIR=`dirname $0`
+MAIN_DIR=`realpath "$OLLAMA_DIR/.."`
+
+OLLAMA_PORT=`${OLLAMA_DIR}/get_free_port.rb`
+CONTAINER_NAME=${USER}-ollama
+# CONTAINER_IMAGE="local/${CONTAINER_NAME}"
+CONTAINER_IMAGE="ollama/ollama:latest"
+COMMAND=`${OLLAMA_DIR}/container_command.sh`
+TAG="0.1.34"
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --gpus=*)
+            GPUS="${1#*=}"
+            ;;
+        --port=*)
+            OLLAMA_PORT="${1#*=}"
+            ;;
+        *)
+            echo "Unknown argument: $1"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [ -z "${GPUS}" ]; then
+    echo "Current GPU Usage:"
+    nvidia-smi
+    read -p "Enter GPU(s) (e.g., '0', '0,1', 'all' or 'none'): " GPUS
+    cat <<EOF
+Provide the GPU(s) to use with OLLAMA by using the --gpu=N option
+in order to avoid this prompt in the future.
+EOF
+fi
+if [ "${GPUS}" == "none" ]; then
+    echo "Using CPU only"
+    DEVICE=""
+else
+    if [ "${GPUS}" == "all" ]; then
+        GPUS=`nvidia-smi --query-gpu=index --format=csv,noheader | paste -sd ","`
+    fi
+    echo "Using GPU(s): ${GPUS}"
+    DEVICE=`echo "${GPUS}" | tr ',' '\n' | while read N; do echo -n " --device nvidia.com/gpu=$N "; done`
+    DEVICE="${DEVICE} --security-opt=label=disable"
+fi
+
+echo "Connect to the OLLAMA daemon at port: $OLLAMA_PORT"
+
+mkdir -p /staging/users/$USER/ollama
+
+export OLLAMA_HOST=0.0.0.0
+
+${COMMAND} run -d ${DEVICE} \
+	--network host \
+	-e OLLAMA_HOST \
+	-v $PWD:/workspace/host \
+	-v /staging/users/$USER/ollama:/root/.ollama \
+	-p ${OLLAMA_PORT}:11434 --name ${CONTAINER_NAME} ${CONTAINER_IMAGE}
+
+PORT_FILE="${HOME}/.ollama_service_port"
+echo $OLLAMA_PORT > $PORT_FILE
+echo "Port number written to: ${PORT_FILE}"
+
+echo "Ready."
