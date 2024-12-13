@@ -1,0 +1,14 @@
+#!/bin/bash
+#    ___  _     _        _    __  __    _       ____ __  __ ____  
+#   / _ \| |   | |      / \  |  \/  |  / \     / ___|  \/  |  _ \ 
+#  | | | | |   | |     / _ \ | |\/| | / _ \   | |   | |\/| | | | |
+#  | |_| | |___| |___ / ___ \| |  | |/ ___ \  | |___| |  | | |_| |
+#   \___/|_____|_____/_/   \_\_|  |_/_/   \_\  \____|_|  |_|____/ 
+#                                                             v1.0
+
+OLLAMA_DIR=`dirname $0`
+MAIN_DIR=`realpath "$OLLAMA_DIR/.."`
+
+CONTAINER_NAME=${USER}-ollama
+COMMAND=`${OLLAMA_DIR}/container_command.sh`
+${COMMAND} exec -it ${CONTAINER_NAME} ollama $*

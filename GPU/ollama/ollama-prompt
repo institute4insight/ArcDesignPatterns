@@ -1,0 +1,20 @@
+#!/bin/bash
+cat <<'EOF'
+   ___  _     _        _    __  __    _      ____                            _   
+  / _ \| |   | |      / \  |  \/  |  / \    |  _ \ _ __ ___  _ __ ___  _ __ | |_ 
+ | | | | |   | |     / _ \ | |\/| | / _ \   | |_) | '__/ _ \| '_ ` _ \| '_ \| __|
+ | |_| | |___| |___ / ___ \| |  | |/ ___ \  |  __/| | | (_) | | | | | | |_) | |_ 
+  \___/|_____|_____/_/   \_\_|  |_/_/   \_\ |_|   |_|  \___/|_| |_| |_| .__/ \__|
+                                                                      |_|        
+                                                                            v1.0
+EOF
+
+OLLAMA_DIR=`dirname $0`
+MAIN_DIR=`realpath "$OLLAMA_DIR/.."`
+
+CONTAINER_NAME=${USER}-ollama
+COMMAND=`${OLLAMA_DIR}/container_command.sh`
+
+MODEL=${1:-llama3}
+echo "Using model: ${MODEL}"
+${COMMAND} exec -it ${CONTAINER_NAME} ollama run ${MODEL}

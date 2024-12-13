@@ -1,0 +1,14 @@
+#!/bin/bash
+cat <<EOF
+Build
+OLLAMA Image
+EOF
+
+OLLAMA_DIR=`dirname $0`
+MAIN_DIR=`realpath "$OLLAMA_DIR/.."`
+
+PORT=`$MAIN_DIR/tools/get_free_port.rb`
+CONTAINER_NAME=${USER}-ollama
+COMMAND=`${MAIN_DIR}/tools/container_command.sh`
+${COMMAND} build -t local/${CONTAINER_NAME} -f Dockerfile.ollama .
+echo "Container: ${CONTAINER_NAME}"

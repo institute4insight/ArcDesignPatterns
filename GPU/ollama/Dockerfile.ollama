@@ -1,0 +1,15 @@
+# Create a docker file using an image of CUDA and pytorch, install python and jupyter
+FROM nvcr.io/nvidia/pytorch:24.01-py3
+# COPY requirements_pytorch.txt .
+RUN apt-get -y update --fix-missing 
+# RUN python3 -m pip install --no-cache-dir --upgrade pip
+# RUN pip install -r requirements_pytorch.txt
+# EXPOSE 8888
+# EXPOSE 5000
+EXPOSE 11434
+WORKDIR /workspace
+RUN bash -c "curl -fsSL https://ollama.com/install.sh | sh"
+ENTRYPOINT ["/usr/local/bin/ollama"]
+CMD ["serve"]
+
+
