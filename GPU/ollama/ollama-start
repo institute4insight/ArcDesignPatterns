@@ -66,7 +66,6 @@ mkdir -p /staging/users/$USER/ollama
 export OLLAMA_HOST=0.0.0.0
 
 ${COMMAND} run -d ${DEVICE} \
-	--network host \
 	-e OLLAMA_HOST \
 	-v $PWD:/workspace/host \
 	-v /staging/users/$USER/ollama:/root/.ollama \
