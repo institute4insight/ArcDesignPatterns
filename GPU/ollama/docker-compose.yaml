@@ -1,0 +1,36 @@
+
+version: '3.8'
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: local_${USER}_${CI_COMMIT_BRANCH}_ollama
+    environment:
+      - OLLAMA_HOST=${OLLAMA_HOST}
+    ports:
+      - "${OLLAMA_PORT}:11434"
+    volumes:
+      - ${OLLAMA_BASE}:/root/.ollama
+      - .:/workspace/host
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: cdi
+              device_ids:
+                - nvidia.com/gpu=0
+                - nvidia.com/gpu=1
+                - nvidia.com/gpu=2
+                - nvidia.com/gpu=3
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    
+    restart: unless-stopped
+
+
+  

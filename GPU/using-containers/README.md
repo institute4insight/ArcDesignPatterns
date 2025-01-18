@@ -43,9 +43,9 @@ Find containers for your desired framework on the [Frameworks Support Matrix](ht
 
 
 ```
-podman run \
-	-p 8888:8888 \
-	--device nvidia.com/gpu=all \
+podman run -rm \
+	-p 39436:8888 \
+	--device nvidia.com/gpu=0 \
 	--security-opt=label=disable \
 	-v $PWD:/myhome -v /data:/mydata \
 	 nvcr.io/nvidia/pytorch:24.01-py3 jupyter-lab
@@ -55,12 +55,13 @@ podman run \
 
 | Parameter | Description |
 |--------|-------------|
-| `-p 8888:8888` | Port-mapping: the port number of the right is the default for Jupyter (8888) which runs inside the container. The port number is  mapped to the number on the left. If you receive an error message about this port number not being availabe, pick a different number (8889, etc.) for the on on the left. The right 8888 always stays the same. |
-| `--device nvidia.com/gpu=all` | This allows to container to use all GPUs on the system. |
+| `--rm` | Remove container after completion. Keep this option for proper cleanup. |  
+| `-p 39436:8888` | Port-mapping: the port number of the right is the default for Jupyter (8888) which runs inside the container. The port number is  mapped to the number on the left. If you receive an error message about this port number not being availabe, pick a different number (8889, etc.) for the on on the left. The right 8888 always stays the same. |
+| `--device nvidia.com/gpu=0` | This allows to container to use the first GPU on the system. |
 | `--security-opt=label=disable` | Keep this the way it is.|
 | `-v $PWD:/myhome -v /data:/mydata` | Pairs of directories that are mapped between host and container. The path on the left represents the directory on the host, and the path on right where this directory is mapped to. E.g. the current directory on the host, `$PWD`, is available inside the container under `/myhome`. Respectively, `/data` on the host can be accessed as `/mydata` in the container. You can use the `-v` option multiple times.|
 | `nvcr.io/nvidia/pytorch:24.01-py3` | Name of container image, e.g. PyTorch. |
-| `jupyter-lab` | Command to run in container. This example will start Jupyter Lab. |
+| `jupyter-lab` | Command to run in container. This example will start Jupyter Lab.  Make sure to terminate kernels before stepping away from the keyboard.|
 
 ## Build your own container
 - Use a suitable container image that includes most of your required packages.
