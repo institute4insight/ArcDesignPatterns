@@ -28,9 +28,9 @@ EOF
 loginctl enable-linger $UID
 podman system migrate
 
-podman run \
+podman run --rm \
 	-p ${FREE_PORT}:8888 \
-	--device nvidia.com/gpu=all \
+	--device nvidia.com/gpu=0 \
 	--security-opt=label=disable \
 	-v $PWD:/myhome -v /data:/mydata \
 	nvcr.io/nvidia/tensorflow:24.01-tf2-py3 jupyter-lab

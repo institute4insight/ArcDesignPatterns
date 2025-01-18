@@ -29,7 +29,7 @@ EOF
 loginctl enable-linger $UID
 podman system migrate
 
-podman run \
+podman run --rm \
 	-p ${FREE_PORT}:8888 \
 	--device nvidia.com/gpu=0 \
 	--security-opt=label=disable \
